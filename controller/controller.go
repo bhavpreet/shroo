@@ -6,8 +6,8 @@ import (
 	"plugin"
 	"time"
 
+	"github.com/PaesslerAG/gval"
 	"github.com/bhavpreet/config"
-	"github.com/bhavpreet/gval"
 	"github.com/go-bongo/go-dotaccess"
 	"github.com/sirupsen/logrus"
 )
