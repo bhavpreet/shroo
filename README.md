@@ -1,3 +1,4 @@
 # shroo
 
-Can be easily used to control peripherals like Humidifier, Fan, Light etc.
+Automated YAML based DSL to control peripherial devices with intend purpose to automate humidification, fanning, heat and light for a tarrarium.
+
