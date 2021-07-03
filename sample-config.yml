@@ -40,14 +40,13 @@ peripherals:
       LightOn:
       LightOff:
         
-  # sheets:
-  #   defs:
-  #     sheetId: "<google sheet id>"
-  #     fieldRange: "Stats!A2"
-  #     credentials: '<credential json>'
-  #     token: '<token json>' # to avoid login
-  #   func:
-  #     Update:
+  sheets:
+    defs:
+      url: "dummy"
+      sheetName: chamber_stats
+      sheetId: "<google sheet id>"
+    func:
+      Update:
         
   # db:
   #   defs:
@@ -64,7 +63,7 @@ actions:
   #         ret: bme
 
   - updateAHT10:
-      every: 100ms
+      every: 500ms
       exec:
         - func: peripherals.aht10.func.Update
           ret: bme
@@ -89,15 +88,15 @@ actions:
           ret: stat.light
           
       actions:
-        - fan:
-            every: 30m
-            duration: 10m
-            exec:
-              - func: peripherals.gpio.func.FanOn
-                ret: stat.fan
-            else:
-              - func: peripherals.gpio.func.FanOff
-                ret: stat.fan
+        # - fan:
+        #     every: 30m
+        #     duration: 10m
+        #     exec:
+        #       - func: peripherals.gpio.func.FanOn
+        #         ret: stat.fan
+        #     else:
+        #       - func: peripherals.gpio.func.FanOff
+        #         ret: stat.fan
 
   - night:
       at: 06:30PM
@@ -137,22 +136,22 @@ actions:
   #           - stat.light
   #           - stat.fog
             
-  # - WriteSheet:
-  #     every: 4100ms
-  #     exec:
-  #       - func: peripherals.sheets.func.Update
-  #         args:
-  #           - bme.Temp
-  #           - bme.RH
-  #           - bme.PS
-  #           - stat.fan
-  #           - stat.light
-  #           - stat.fog
+  - WriteSheet:
+      every: 5100ms
+      exec:
+        - func: peripherals.sheets.func.Update
+          args:
+            - bme.Temp
+            - bme.RH
+            - bme.PS
+            - stat.fan
+            - stat.light
+            - stat.fog
             
 
-  - FanOff:
-      every: 99h
-      duration: 20m
-      exec:
-        - func: peripherals.gpio.func.FanOff
-          ret: stat.fan
+  # - FanOff:
+  #     every: 99h
+  #     duration: 20m
+  #     exec:
+  #       - func: peripherals.gpio.func.FanOff
+  #         ret: stat.fan

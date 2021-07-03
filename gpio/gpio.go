@@ -32,10 +32,10 @@ func Init(periph interface{}) interface{} {
 	light.Output()
 
 	// All OFF
-	fog.High()
-	heater.High()
-	fan.High()
-	light.High()
+	fog.Low()
+	heater.Low()
+	fan.Low()
+	light.Low()
 
 	return nil
 }
@@ -53,35 +53,35 @@ func InitDebug(periph interface{}) interface{} {
 }
 
 func FanOn(interface{}) interface{} {
-	fan.Low()
+	fan.High()
 	return true
 }
 func FanOff(interface{}) interface{} {
-	fan.High()
+	fan.Low()
 	return false
 }
 func FogOn(interface{}) interface{} {
-	fog.Low()
+	fog.High()
 	return true
 }
 func FogOff(interface{}) interface{} {
-	fog.High()
+	fog.Low()
 	return false
 }
 func LightOn(interface{}) interface{} {
-	light.Low()
+	light.High()
 	return true
 }
 func LightOff(interface{}) interface{} {
-	light.High()
+	light.Low()
 	return false
 }
 
 func HeaterOn(interface{}) interface{} {
-	heater.Low()
+	heater.High()
 	return true
 }
 func HeaterOff(interface{}) interface{} {
-	heater.High()
+	heater.Low()
 	return false
 }

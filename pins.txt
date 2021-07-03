@@ -1,0 +1,5 @@
+# Relay <-> GPIO pins
+1 - 17 - fog
+2 - 18 - fan
+3 - 23 - light
+4 - 15 - heater
