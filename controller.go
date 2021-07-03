@@ -1,4 +1,4 @@
-package controller
+package main
 
 import (
 	"os"
@@ -78,7 +78,7 @@ func (t *Time) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return err
 }
 
-func Init() {
+func ControllerInit() {
 	cfg = new(conf)
 	config.Bind(cfg)
 	for k := range cfg.Peripherals {
@@ -96,7 +96,8 @@ func Init() {
 	// for all peripherals, call Init
 	for p := range cfg.Peripherals {
 		x := cfg.Peripherals[p]
-		if x.Plug, err = plugin.Open(dir + "/" + p + "/" + p + ".so"); err != nil {
+		path := dir + "/" + p + ".so"
+		if x.Plug, err = plugin.Open(path); err != nil {
 			logrus.WithFields(logrus.Fields{"err": err}).Fatalf("Unable to open plugin: %s", p)
 		}
 
@@ -242,7 +243,7 @@ func (acts *actions) Run(now time.Time) {
 	}
 }
 
-func Run() {
+func ControllerRun() {
 	ticker := time.NewTicker(cfg.Tick.Duration)
 	defer ticker.Stop()
 	for now := range ticker.C {

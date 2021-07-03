@@ -13,12 +13,18 @@ peripherals:
     func:
       Print:
         
-  bme280:
+  # bme280:
+  #   defs:
+  #     tempCorrection: -6.5
+  #   func:
+  #     Update:
+
+  aht10:
     defs:
-      tempCorrection: -6.5
+      tempCorrection: 0.0
     func:
       Update:
-        
+       
   gpio:
     defs:
       fog: 17
@@ -34,14 +40,14 @@ peripherals:
       LightOn:
       LightOff:
         
-  sheets:
-    defs:
-      sheetId: "<google sheet id>"
-      fieldRange: "Stats!A2"
-      credentials: '<credential json>'
-      token: '<token json>' # to avoid login
-    func:
-      Update:
+  # sheets:
+  #   defs:
+  #     sheetId: "<google sheet id>"
+  #     fieldRange: "Stats!A2"
+  #     credentials: '<credential json>'
+  #     token: '<token json>' # to avoid login
+  #   func:
+  #     Update:
         
   # db:
   #   defs:
@@ -51,14 +57,20 @@ peripherals:
   #     Write:
 
 actions:
-  - updateBME:
+  # - updateBME:
+  #     every: 100ms
+  #     exec:
+  #       - func: peripherals.bme280.func.Update
+  #         ret: bme
+
+  - updateAHT10:
       every: 100ms
       exec:
-        - func: peripherals.bme280.func.Update
+        - func: peripherals.aht10.func.Update
           ret: bme
-        
+       
   - fog:
-      if: bme.RH < 95
+      if: bme.RH < 80
       exec:
         - func: peripherals.gpio.func.FogOn
           ret: stat.fog
@@ -125,17 +137,17 @@ actions:
   #           - stat.light
   #           - stat.fog
             
-  - WriteSheet:
-      every: 4100ms
-      exec:
-        - func: peripherals.sheets.func.Update
-          args:
-            - bme.Temp
-            - bme.RH
-            - bme.PS
-            - stat.fan
-            - stat.light
-            - stat.fog
+  # - WriteSheet:
+  #     every: 4100ms
+  #     exec:
+  #       - func: peripherals.sheets.func.Update
+  #         args:
+  #           - bme.Temp
+  #           - bme.RH
+  #           - bme.PS
+  #           - stat.fan
+  #           - stat.light
+  #           - stat.fog
             
 
   - FanOff:

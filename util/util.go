@@ -8,7 +8,7 @@ func Init(interface{}) interface{} {
 
 func Print(a interface{}) interface{} {
 	go func() {
-		logrus.Info(a)
+		logrus.Infof("%v", a)
 	}()
 	return nil
 }
