@@ -19,10 +19,15 @@ type envt struct {
 	PS   float64
 }
 
-var rete envt
+var (
+	rete     envt
+	isInited bool
+)
 
-func Init(_defs interface{}) interface{} {
-	defs = _defs.(map[string]interface{})
+func initDevice() bool {
+	if isInited {
+		return isInited
+	}
 
 	if _, err := host.Init(); err != nil {
 		log.Fatal(err)
@@ -30,7 +35,8 @@ func Init(_defs interface{}) interface{} {
 
 	b, err := i2creg.Open("")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Unable to to i2creg.Open, err: ", err)
+		return false
 	}
 
 	// Dev is a valid conn.Conn.
@@ -39,15 +45,24 @@ func Init(_defs interface{}) interface{} {
 	// Initialize
 	_, err = dev.Write([]byte{CMD_INITIALIZE, 0x00, 0x00})
 	if err != nil {
-		log.Fatalf("d.Write")
+		log.Printf("Failed to d.Write, on CMD_INITIALIZE, err: %v", err)
+		return false
 	}
 	time.Sleep(500 * time.Millisecond)
 
 	_, err = dev.Write([]byte{CMD_INITIALIZE, 0x08, 0x00})
 	if err != nil {
-		log.Fatalf("d.Write")
+		log.Printf("Failed to d.Write, on CMD_INITIALIZE, err: %v", err)
+		return false
 	}
+	isInited = true
 	time.Sleep(450 * time.Millisecond)
+	return isInited
+}
+
+func Init(_defs interface{}) interface{} {
+	defs = _defs.(map[string]interface{})
+	initDevice()
 	return nil
 }
 
@@ -58,14 +73,22 @@ func InitDebug(_defs interface{}) interface{} {
 }
 
 func Update(args interface{}) interface{} {
-	dev.Tx([]byte{CMD_TRIGGER, 0x00, 0x00}, nil)
 
+	// Init device if it was previously in bad state
+	if !initDevice() {
+		log.Print("Unable to initialize the device!!")
+		return rete
+	}
+
+	dev.Tx([]byte{CMD_TRIGGER, 0x00, 0x00}, nil)
 	data := []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	for retry := 0; retry < 3; retry++ {
 		time.Sleep(80 * time.Millisecond)
 		err := dev.Tx(nil, data)
 		if err != nil {
-			log.Fatalf("dev.Tx")
+			log.Printf("Faild at dev.Tx, err: %v", err)
+			isInited = false
+			break
 		}
 
 		if data[0]&0x68 == 0x08 {

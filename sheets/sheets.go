@@ -24,11 +24,42 @@ func InitDebug(_defs interface{}) interface{} {
 	return nil
 }
 
+// Expects args as an array of interfaces
+func isValidInput(args interface{}) bool {
+	_args, ok := args.([]interface{})
+	if !ok {
+		return false
+	}
+	if _args[0].(float64) > 100.0 {
+		return false
+	}
+	if _args[1].(float64) > 100.0 {
+		return false
+	}
+	// if _args[5].(bool) > 100.0 {
+	// 	return false
+	// }
+	// if _args[3].(bool) > 100.0 {
+	// 	return false
+	// }
+	// if _args[4].(bool) > 100 {
+	// 	return false
+	// }
+	if _args[2].(float64) > 100.0 {
+		return false
+	}
+	return true
+}
+
 // Update updates the sheet
 func Update(args interface{}) interface{} {
 	_url := defs["url"].(string)
 	sheetName := defs["sheetName"].(string)
 
+	if !isValidInput(args) {
+		fmt.Printf("Invalid input = %v", args)
+		return nil
+	}
 	_args := args.([]interface{})
 	v := url.Values{}
 	v.Set("sheet", sheetName)
