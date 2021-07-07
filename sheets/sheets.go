@@ -63,7 +63,7 @@ func Update(args interface{}) interface{} {
 	_args := args.([]interface{})
 	v := url.Values{}
 	v.Set("sheet", sheetName)
-	v.Add("col1", fmt.Sprintf("%v", time.Now()))
+	v.Add("col1", fmt.Sprintf("%v", time.Now().Format(time.RFC3339)))
 	v.Add("col2", fmt.Sprintf("%v", _args[0].(float64)))
 	v.Add("col3", fmt.Sprintf("%v", _args[1].(float64)))
 	v.Add("col4", fmt.Sprintf("%v", _args[5].(bool)))
